@@ -59,10 +59,6 @@ export const ResourceDetailPage: React.FC<ResourceDetailPageProps> = ({
 
   const isUnavailable = resource.availability.status !== 'available';
 
-  const schedule = resource.availability.schedule || [];
-  const currentDay = schedule[selectedDayIndex] || schedule[0];
-  const images = resource.images && resource.images.length > 0 ? resource.images : [resource.image];
-
   const handleBookingRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     const rate = resource.pricing.hourlyRate || Math.round((resource.pricing.dailyRate || 100) / 8);

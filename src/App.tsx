@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { lazy, Suspense, useState, useMemo, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { FeaturedResources } from './components/FeaturedResources';
@@ -9,11 +9,12 @@ import { Footer } from './components/Footer';
 import { ResourceModal } from './components/ResourceModal';
 import { ListResourceModal } from './components/ListResourceModal';
 import { AuthModal } from './components/AuthModal';
-import { DirectoryPage } from './components/DirectoryPage';
-import { ResourceDetailPage } from './components/ResourceDetailPage';
-import { DashboardLayout } from './components/dashboard/DashboardLayout';
 import { useAuth } from './context/AuthContext';
 import { ResourceItem, SearchFilters } from './types/resource';
+
+const DirectoryPage = lazy(() => import('./components/DirectoryPage').then(module => ({ default: module.DirectoryPage })));
+const ResourceDetailPage = lazy(() => import('./components/ResourceDetailPage').then(module => ({ default: module.ResourceDetailPage })));
+const DashboardLayout = lazy(() => import('./components/dashboard/DashboardLayout').then(module => ({ default: module.DashboardLayout })));
 
 export function App() {
   const { resources } = useAuth();
@@ -219,6 +220,7 @@ export function App() {
 
       {/* Main Content Router */}
       <main className="flex-1">
+        <Suspense fallback={<div className="min-h-[40vh]" aria-label="Loading page" />}>
         {currentView === 'home' && (
           <>
             {/* Hero Section with Search Integration */}
@@ -278,6 +280,7 @@ export function App() {
             onOpenLoginModal={() => setAuthModalOpen(true)}
           />
         )}
+        </Suspense>
       </main>
 
       {/* Footer */}
